@@ -2,3 +2,17 @@
 title: "Learn-R-Here"
 format: html
 ---
+
+List of Things to Teach:
+
+-   Variables
+
+-   Dataframes
+
+-   Basic Shinyapp
+
+-   Fake Data Creation
+
+-   Creating actual graphs based on Fake Data
+
+-   

@@ -3,3 +3,10 @@ title: "Test-New-Code-Here"
 format: html
 ---
 
+```{r}
+df <- read.csv()
+
+ggplot(df, aes(x, y)) |>
+    geom_point()
+
+```

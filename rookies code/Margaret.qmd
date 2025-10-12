@@ -1,0 +1,11 @@
+---
+title: "Margaret"
+format: html
+---
+
+Thursdays
+
+Covered: Variables, Dataframes, Basic Shinyapp
+
+```{r}
+```
