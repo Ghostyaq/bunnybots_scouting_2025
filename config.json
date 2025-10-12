@@ -223,7 +223,7 @@
           "step": 1
         },
         {
-          "title": "Lunites Missed",
+          "title": "Lunites Missed/Launched Outside",
           "description": "How many lunites did they miss?",
           "type": "counter",
           "required": false,
@@ -243,20 +243,6 @@
           "defaultValue": 0,
           "min": 0,
           "step": 1
-        },
-        {
-          "title": "Robot Role",
-          "description": "How the robot 'scores'.",
-          "type": "select",
-          "required": false,
-          "code": "preHowScore",
-          "formResetBehavior": "reset",
-          "defaultValue": "",
-          "choices": {
-            "FFC": "Full Field Cycles",
-            "P": "Passing",
-            "R": "Recieving"
-          }
         }
       ]
     },
@@ -284,7 +270,7 @@
           "step": 1
         },
         {
-          "title": "Lunites Missed",
+          "title": "Lunites Missed/Launched Outside",
           "description": "How many lunites did they miss?",
           "type": "counter",
           "required": false,
@@ -304,20 +290,6 @@
           "defaultValue": 0,
           "min": 0,
           "step": 1
-        },
-        {
-          "title": "Robot Role",
-          "description": "How the robot 'scores'.",
-          "type": "select",
-          "required": false,
-          "code": "postHowScore",
-          "formResetBehavior": "reset",
-          "defaultValue": "",
-          "choices": {
-            "FFC": "Full Field Cycles",
-            "P": "Passing",
-            "R": "Recieving"
-          }
         }
       ]
     },
