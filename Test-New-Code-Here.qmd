@@ -10,3 +10,5 @@ ggplot(df, aes(x, y)) |>
     geom_point()
 
 ```
+
+Adding some text to test the autodeploy
