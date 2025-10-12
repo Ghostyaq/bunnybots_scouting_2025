@@ -401,7 +401,7 @@
           "step": 1
         },
         {
-          "title": "Died/Tipped Over etc.",
+          "title": "Difficulties",
           "description": "Things that made it so your robot could no longer function for the rest of the match",
           "type": "select",
           "required": true,
@@ -411,10 +411,10 @@
           "choices": {
             "NA": "None",
             "ls": "Lunite Stuck",
-            "ba": "Beached on an lunite",
-            "di": "Disabled(Orange light fully on)",
-            "de": "Dead(Orange light fully off)",
-            "t": "Tipped over"
+            "ba": "Beached on a lunite",
+            "di": "Disabled (Orange light fully on)",
+            "de": "Dead (Orange light fully off)",
+            "t": "Tipped Over"
           }
         },
         {
@@ -425,12 +425,9 @@
           "formResetBehavior": "reset",
           "choices": {
             "0": "Played Defense",
-            "1": "Wobbly Bot",
-            "2": "Incosistent Shooting",
-            "3": "Many Penalties",
-            "4": "Broke during this match",
-            "5": "Bad Intake",
-            "6": "Ground intook lunites"
+            "1": "Inconsistent Shooting",
+            "2": "Inconsistent Intake",
+            "3": "Poor CG"
           }
         },
         {
