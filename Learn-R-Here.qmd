@@ -18,3 +18,107 @@ List of Things to Teach:
 -   Testing Testing 123
 
 -   testing again, but Gabriel's machine this time
+
+
+## Planning for teaching R
+
+Write basic histogram
+
+```{r}
+#make sure to install these packages first 
+library(dslabs) #Explain libraries
+library(ggplot2) 
+library(tidyverse)
+library(scales)
+
+raw = murders #use equal sign if no programming experience beforehand, use <- if they have experience
+
+hist(raw$total) #have time figure this out with ?hist or help(hist), then reading the documentation
+```
+
+```{r}
+#Dataframes...
+#What are they?
+
+x <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+y <- 1:10
+# does x = y?
+
+z <- data.frame(x, y)
+#how would I access the x data? y data?
+#how would I access a specific datapoint? z$x[4]
+
+#what is tidy data?
+#go to the slideshow https://docs.google.com/presentation/d/1EegeSUDCqnyg5rroPHMdVEJu8JtvQhFOtKkQcoXN7e8/edit?usp=sharing
+
+
+```
+
+Write graph of murder_rate vs state
+
+```{r}
+raw <- murders |> #Explain the pipe operator
+    mutate( #explain why we used mutate
+        murder_rate = total/population * 10^6
+    )
+
+#raw$murder_rate <- raw$total / raw$population * 10^6   #alternative method, but gets annoying after more than one change
+
+ggplot(raw, aes(x = total, y = murder_rate)) +  #explain the ggplot library/function, explain the aesthetics
+    geom_point() + 
+    geom_text(aes(label = abb), nudge_y = 20)
+```
+
+Connect with the scouting2025 repo through "New Project", link GitHub, gain access to the shinyapp/data_files/newton/data.csv.
+
+Write this in a new file (in the scouting2025)
+
+```{r}
+raw <- read.csv("shinyapp/data_files/newton/data.csv")
+#choices: 422, 449, 1323, 2910
+selected_teams <- c(422, 449, 1323, 2910) #explain c() -> maybe go into a tangent about R programming being mainly about vectors/lists, dataframes/tidies, etc.
+
+past_match_points <- raw |>
+    group_by(team) |>
+    mutate(team = as.factor(team)) |>
+    filter(team %in% selected_teams) |>
+    summarize(
+        team = team,
+        match = match,
+        total_score = 
+            move*3 +
+            auto_coral_L1_num*3 + auto_coral_L2_num*4 + auto_coral_L3_num*6 + auto_coral_L4_num*7 +
+            robot_net_score*4 + proc_score*2.5 +
+            coral_L1_num*2 + coral_L2_num*3 + coral_L3_num*4 + coral_L4_num*5 +
+            ifelse(ending =="D", 12, ifelse(ending=="S",6,ifelse(ending=="P", 2, 0))),
+    )
+
+team_colors <- setNames(hue_pal()(length(levels(past_match_points$team))), levels(past_match_points$team))
+
+ggplot(past_match_points, aes(x = match, y = total_score, color = team, group = team)) + 
+    geom_line(size = 1) +
+    geom_point(size = 2) + 
+    scale_fill_manual(values = team_colors) +
+    #scale_y_continuous(limits = c(0, max(past_match_points$total_score, na.rm = TRUE))) +
+    #scale_x_continuous(breaks = unique(past_match_points$match)) +
+    #labs(title = "Points Over Time", x = "Match", y = "Total Score", color = "Team") +
+    theme_minimal()
+```
+
+After this, I guess take the rookie through the ShinyApp and see if there's anything in particular they would like to code.
+
+Extra Thoughts: Go through the shinyapp - Look at the Newton data. Then, selected Alliance 4 and Alliance 8 to analyze. Give context: If we don't win this match, we're out of the season. Give statbotics statistics: 72% chance we lose. They predicted the score of 228 - 254 (R - B).
+
+Game Strategy Process: Identify who we think is going to play in the match. Take those robots, then plug it into the 'Select 6 Teams' feature for easier visualization. Generate our graphs. Let our rookies make some predictions: What will each robot do? Allow them to explore the Compare Teams tab or Single Team tab to look for comments. Try to get the rookies to predict what happens, give each rookie a strategy board and challenge them to come up with their own strategy for our robots. Then, watch the actual match.
+
+```{r}
+#let's start doing bunnybots stuff! we should probably run through an exercise involving them generating fake data! reference the generating_data.qmd
+
+#sample(x, size, replace = ?, )
+#df <- data.frames?
+#write_csv(df, file = "made_up_data.csv")
+
+#This should take ~15-30 minutes top
+
+
+```
