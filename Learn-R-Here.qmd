@@ -19,7 +19,6 @@ List of Things to Teach:
 
 -   testing again, but Gabriel's machine this time
 
-
 ## Planning for teaching R
 
 Write basic histogram
@@ -112,6 +111,8 @@ Extra Thoughts: Go through the shinyapp - Look at the Newton data. Then, selecte
 Game Strategy Process: Identify who we think is going to play in the match. Take those robots, then plug it into the 'Select 6 Teams' feature for easier visualization. Generate our graphs. Let our rookies make some predictions: What will each robot do? Allow them to explore the Compare Teams tab or Single Team tab to look for comments. Try to get the rookies to predict what happens, give each rookie a strategy board and challenge them to come up with their own strategy for our robots. Then, watch the actual match.
 
 ```{r}
+#let rookies explore variables we want to collect -> take their input
+
 #let's start doing bunnybots stuff! we should probably run through an exercise involving them generating fake data! reference the generating_data.qmd
 
 #sample(x, size, replace = ?, )
