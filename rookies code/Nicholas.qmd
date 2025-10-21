@@ -7,6 +7,8 @@ Sundays
 
 Covered:
 
-```{r}hello}
+```{r}
+hello
 
+pull-test for nicholas
 ```
