@@ -4,5 +4,15 @@ format: html
 ---
 
 ```{r}
+scout_initials=sample(c("NS","HR"),size=201,replace=TRUE)
+match_number=floor(seq(from=4,to=204)/4)
+team_number=sample(c(100:1000),size=201,replace=TRUE)
+starting_position=sample(c("I","O"),size=201,replace=TRUE)
+no_show=sample(c(TRUE,FALSE),size=201,replace=TRUE,prob=c(1,99))
+auto_lunites_missed=sample(c(0:3),size=201,replace=TRUE,prob=c(2,1,1,2))
+auto_lunites_high=sample(c(0:3),size=201,replace=TRUE,prob=c(4:1))
+auto_lunites_low=sample(c(0:6),size=201,replace=TRUE,prob=c(7:1))
+moved=sample(c(TRUE,FALSE),size=201,replace=TRUE,prob=c(9,1))
+ground_intake_auto=sample(c(TRUE,FALSE),size=201,replace=TRUE,prob=c(1,9))
 
 ```
