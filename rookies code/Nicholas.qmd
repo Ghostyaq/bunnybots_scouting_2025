@@ -7,6 +7,6 @@ Sundays
 
 Covered:
 
-```{r}
+```{r}hello}
 
 ```
