@@ -14,6 +14,16 @@ auto_lunites_high = sample(c(0:3), size=201, replace=TRUE, prob=c(4:1))
 auto_lunites_low = sample(c(0:6), size=201, replace=TRUE, prob=c(7:1))
 moved = sample(c(TRUE,FALSE), size=201, replace=TRUE, prob=c(9,1))
 ground_intake_auto = sample(c(TRUE,FALSE), size=201, replace=TRUE, prob=c(1,9))
+teleop_preshutdown_high_lunites_scored = sample(c(0:10), size=201, replace=TRUE, prob=c(1,2,3,4,5,6,5,4,3,2,1))
+teleop_preshutdown_low_lunites_scored = sample(c(0:7), size=201, replace=TRUE, prob=c(1,2,3,4,4,3,2,1))
+teleop_preshutdown_lunites_missed = sample(c(0:5), size=201, replace=TRUE, prob=c(1,2,3,3,2,1))
+teleop_preshutdown_lunites_passed = sample(c(0:5), size=201, replace=TRUE, prob=c(1,2,3,3,2,1))
 
 
+
+
+
+
+postmatch_driver_ranking = sample(c(1:5), size=201, replace=TRUE)
+postmatch_difficulties = sample(c(NA,"ls","ba","di","de","t"), size=201, replace=TRUE, prob=c(5,1,1,1,1,1))
 ```
