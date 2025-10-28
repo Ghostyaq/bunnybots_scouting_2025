@@ -3,9 +3,11 @@ title: "Alice"
 format: html
 ---
 
-Thursdays
+Tuesdays
 
 Covered: Variables, Dataframes, Basic Shinyapp
+
+Section of Shinyapp to do: Tele-Op Pre & Post-Shutdown Lunite Bar Graph
 
 ```{r}
 
