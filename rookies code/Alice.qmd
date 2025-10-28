@@ -10,5 +10,27 @@ Covered: Variables, Dataframes, Basic Shinyapp
 Section of Shinyapp to do: Tele-Op Pre & Post-Shutdown Lunite Bar Graph
 
 ```{r}
-
+library(tidyverse)
+raw <- read.csv("../shinyapp/data_files/fake_data.csv")
+getwd()
+select = 449
+data <- raw|>
+select(teleop_preshutdown_high_lunites_scored,teleop_preshutdown_low_lunites_scored,teleop_preshutdown_lunites_missed,teleop_preshutdown_lunites_passed,teleop_postshutdown_high_lunites_scored,teleop_postshutdown_low_lunites_scored,teleop_postshutdown_lunites_missed,teleop_postshutdown_lunites_passed)|>
+    filter(team_num == select)|>
+summarize(
+    
+    tp_preshut_highls = mean(teleop_preshutdown_high_lunites_scored),
+    tp_preshut_lowls = mean(teleop_preshutdown_low_lunites_scored),
+    tp_preshut_lmiss = mean(teleop_preshutdown_lunites_missed),
+    tp_preshut_lpass = mean(teleop_preshutdown_lunites_passed),
+    tp_postshut_highls = mean(teleop_postshutdown_high_lunites_scored),
+    tp_postshut_lowls = mean(teleop_postshutdown_low_lunites_scored),
+    tp_postshut_lmiss = mean(teleop_postshutdown_lunites_missed),
+    tp_postshut_lpass = mean(teleop_preshutdown_lunites_passed)
+)|>
+pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_preshut_lmiss, tp_preshut_lpass, tp_postshut_highls, tp_postshut_lowls, tp_postshut_lmiss, tp_postshut_lpass))
+ggplot(raw, aes(x = factor(team), y = points_score, fill = type)) +
+       geom_bar(position = "stack", stst = "identity", width = 0.3) +
+    labs(title = paste("Level Summary for Team", team_number), x = "Team", y = "Tele score", fill = "Points")
+       
 ```
