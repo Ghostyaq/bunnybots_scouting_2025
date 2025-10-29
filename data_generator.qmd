@@ -34,7 +34,7 @@ post_lunites_passed=sample(c(0:10),size=n,replace=TRUE,prob=c(1,2,3,4,5,6,5,4,3,
 postmatch_driver_ranking = sample(c(1:5), size=n, replace=TRUE)
 postmatch_difficulties = sample(c("NA","ls","ba","di","de","t"), size=n, replace=TRUE, prob=c(5,1,1,1,1,1))
 
-df <- data.frame(scout_initials, match_number, robot_loc, team_number, starting_position, no_show, auto_lunites_missed, auto_lunites_high, auto_lunites_low, moved, ground_intake_auto, teleop_preshutdown_high_lunites_scored, teleop_preshutdown_low_lunites_scored, teleop_preshutdown_lunites_missed, teleop_preshutdown_lunites_passed, end_position, bunnies_inside, tele_op_ground_intake, general_comments, defense_fouls, defense_rating, post_high_lunites_scored, post_low_lunites_scored, post_lunites_missed, post_lunites_passed, postmatch_driver_ranking, postmatch_difficulties)
+df <- data.frame(scout_initials, match_number, robot_loc, team_number, starting_position, no_show, auto_lunites_missed, auto_lunites_high, auto_lunites_low, moved, ground_intake_auto, teleop_preshutdown_high_lunites_scored, teleop_preshutdown_low_lunites_scored, teleop_preshutdown_lunites_missed, teleop_preshutdown_lunites_passed, post_high_lunites_scored, post_low_lunites_scored, post_lunites_missed, post_lunites_passed, end_position, bunnies_inside, tele_op_ground_intake, general_comments, defense_fouls, defense_rating, postmatch_driver_ranking, postmatch_difficulties)
 
-write_csv(df, file = "shinyapp/data_files/fake_data.csv")
+#write_csv(df, file = "shinyapp/data_files/fake_data.csv")
 ```
