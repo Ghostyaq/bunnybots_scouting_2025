@@ -123,3 +123,58 @@ Game Strategy Process: Identify who we think is going to play in the match. Take
 
 
 ```
+
+```{r}
+#Instructions: Run through this with whoever's there (most likely Margaret), maybe grab a whiteboard and marker to explain directories and how to move through them.
+#Goal: Program the cycle history graph (found in the shinyapp, "https://mitchell-ghosty33.shinyapps.io/2025_Reefscape_Shinyapp/", Single Team -> Cycle History)
+#Notes: EXPECT THIS TO TAKE A WHILE, try your best to let them discover the process. For example, remind them of maybe using the pipe operator, mutate function, filter function, and select function. Feel free to not incorporate all code on the first run-through -> Go back to refine it after you get the inital line.
+
+getwd() #Where is this code running? In THIS code block, we're in bunnybots_scouting_2025. 
+raw <- read.csv("shinyapp/data_files/fake_data.csv") #Since shinyapp is on this level, we can enter shinyapp, then enter data_files, then enter fake_data.csv
+
+selected <- 449 #we only want to display data for one team right now
+
+#What to do next? 
+#In order to graph things, we need to manipulate data -> common practice (for us) is to place this into a new dataframe with only the variables we need. In this case, we want total cycles per match. But how do we do this?
+#Currently, we have auto_lunites_missed, auto_lunites_high, auto_lunites_low, teleop_preshutdown_high_lunites_scored, teleop_preshutdown_low_lunites_scored, teleop_preshutdown_lunites_missed, teleop_preshutdown_lunites_passed, post_high_lunites_scored, post_low_lunites_scored, post_lunites_missed, post_lunites_passed
+#That's a lot! But we want to condense that into one cycle variable; how do we do that?
+
+data <- raw |>
+    filter(team_number == selected) |>
+    mutate(
+        #optional part if we want to distinguish between auto and tele
+        auto_cycles = auto_lunites_missed + auto_lunites_high + auto_lunites_low,
+        
+        tele_cycles = 
+            teleop_preshutdown_high_lunites_scored +
+            teleop_preshutdown_low_lunites_scored + 
+            teleop_preshutdown_lunites_missed + 
+            teleop_preshutdown_lunites_passed +
+            post_high_lunites_scored + 
+            post_low_lunites_scored + 
+            post_lunites_missed + 
+            post_lunites_passed,
+        
+        total_cycles = auto_cycles + tele_cycles #this is the important part <- graph 1st
+        )|>
+    select(match_number, team_number, auto_cycles, tele_cycles, total_cycles) 
+#Only select the columns/variables we are interested in (best practices)
+
+#We want to ggplot with our modified dataframe (data). We set the x-axis to be equal to the matches, since we're graphing by match
+ggplot(data, aes(x = match_number)) + 
+    geom_line(aes(y = total_cycles), color = "black") + #Represents total_cycles per match
+    geom_line(aes(y = auto_cycles), color = "red") + #optional
+    geom_line(aes(y = tele_cycles), color = "blue") + #optional
+    scale_y_continuous() + #optional, prettifies
+    scale_x_continuous(breaks = data$match_number) + #optional, tells us specific matches 
+    labs( #optional, it's just the title and labels
+        title = "Cycle Summary",
+        x = "Match",
+        y = "Auto (red) || Tele (blue) || Total (black)"
+    ) +
+    theme_bw() #NOT OPTIONAL (will be ugly without so it's kinda optional :])
+    
+    
+```
+
+\
