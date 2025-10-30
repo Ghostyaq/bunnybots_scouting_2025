@@ -13,27 +13,83 @@ Section of Shinyapp to do: Auto Bar Graph, Sectioned Colored Bar Graph (Scoring 
 library(tidyverse)
 raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 getwd()
+
+#Single Auto Point Bar Graph
+
 select<-449
 data <-raw|>
-
 select(auto_lunites_high,team_number,auto_lunites_low,moved)|>
     filter(team_number==select)|>
     group_by(team_number)|>
     summarize(
-        ALH=mean(auto_lunites_high),
-        ALL=mean(auto_lunites_low),
-        move=mean(moved)
+        ALH=mean(auto_lunites_high)*7,
+        ALL=mean(auto_lunites_low)*4,
+        move=mean(moved)*4
     )|>
 
 pivot_longer(cols=c(ALL,ALH,move),
              names_to="type",
-             values_to="cycles")
+             values_to="points")
 
-ggplot(data, aes(x=factor(team_number),y=cycles, fill=type))+
+ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
     geom_bar(position="stack",stat="identity",width=0.3)+
-    labs(title=paste("Auto Cycles for Team",team_number))
+    labs(title=paste("Auto Points for Team",select))
 
+
+#Compare Auto Point Bar Graph
+
+select<-c(449,6767)
+
+data <-raw|>
+select(auto_lunites_high,team_number,auto_lunites_low,moved)|>
+    filter(team_number==select)|>
+    group_by(team_number)|>
+    summarize(
+        ALH=mean(auto_lunites_high)*7,
+        ALL=mean(auto_lunites_low)*4,
+        move=mean(moved)*4
+    )|>
+
+pivot_longer(cols=c(ALL,ALH,move),
+             names_to="type",
+             values_to="points")
+
+ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
+    geom_bar(position="stack",stat="identity",width=0.3)+
+    labs(title=paste("Auto Points for Team",select))
+
+#Single Endgame Point Bar Graph
+
+selected<-449
+
+data <-raw|>
+select(bunnies_inside,team_number,end_position)|>
+    filter(team_number==selected)
     
+data<-data|>
+mutate(
+        points=case_when(data$end_position == "none" ~ 0, data$end_position == "linked" ~ 5, .default=0)
+    )
+
+ggplot(data, aes(x = end_position)) + 
+    geom_bar()
+
+data<-data|>
+    group_by(team_number)|>
+    summarize(
+        Bunnies=mean(bunnies_inside)*6,
+        End=mean(points),
+    )|>
+
+pivot_longer(cols=c(Bunnies,End),
+             names_to="type",
+             values_to="points")
+
+ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
+    geom_bar(position="stack",stat="identity",width=0.3)+
+    labs(title=paste("Endgame Points for Team",selected),x="Team Number")+
+    theme_bw()
+
 
 
 ```
@@ -46,6 +102,5 @@ raw<-murders|>
 
 ggplot(raw,aes(x=total,y=population))+
     geom_point()+
-    geom_text(aes(label=abb))+
-    geom_line()
+    geom_text(aes(label=abb))
 ```
