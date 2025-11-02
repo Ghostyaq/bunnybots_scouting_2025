@@ -306,7 +306,6 @@
           "defaultValue": "No",
           "choices": {
             "No": "None",
-            "P": "Park",
             "L": "Linked"
           }
         },
