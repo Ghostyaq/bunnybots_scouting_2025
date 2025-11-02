@@ -10,6 +10,8 @@ Covered: Variables, Dataframes, Basic Shinyapp
 Section of Shinyapp to do: Tele-Op Pre & Post-Shutdown Lunite Bar Graph
 
 ```{r}
+#group_by, select/selected, select(forgot something), pivot_longer unfin, check variable names
+
 library(tidyverse)
 raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 getwd()
@@ -18,7 +20,6 @@ data <- raw|>
 select(pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_missed)|>
     filter(team_num == select)|>
 summarize(
-    
     tp_preshut_highls = mean(pre_high_lunites_scored),
     tp_preshut_lowls = mean(pre_low_lunites_scored),
     tp_preshut_lmiss = mean(pre_lunites_missed),

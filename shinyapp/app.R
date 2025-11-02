@@ -87,6 +87,26 @@ server <- function(input, output) {
              xlab = 'Waiting time to next eruption (in mins)',
              main = 'Histogram of waiting times')
     })
+    
+    #COMPARE TEAMS
+    auto_bar_graph <- function(raw, selection) {
+        data <- raw |>
+            select(auto_lunites_high,team_number,auto_lunites_low,moved) |>
+            filter(team_number %in% selection) |>
+            group_by(team_number) |>
+            summarize(
+                ALH=mean(auto_lunites_high)*7,
+                ALL=mean(auto_lunites_low)*4,
+                move=mean(moved)*4
+            )|>
+            pivot_longer(cols=c(ALL,ALH,move),
+                         names_to="type",
+                         values_to="points")
+        
+        ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
+            geom_bar(position="stack",stat="identity",width=0.3)+
+            labs(title=paste("Auto Points for Team",select))
+    }
 }
 
 # Run the application 

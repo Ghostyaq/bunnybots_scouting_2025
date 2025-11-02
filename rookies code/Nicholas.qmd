@@ -7,14 +7,13 @@ Tuesdays
 
 Covered: yes
 
-Section of Shinyapp to do: Auto Bar Graph, Sectioned Colored Bar Graph (Scoring Summary), Cycle History
+Section of Shinyapp to do: **Auto Bar Graph**, Sectioned Colored Bar Graph (Scoring Summary), Cycle History
+
+## Single Auto Point Bar Graph
 
 ```{r}
 library(tidyverse)
 raw <- read.csv("../shinyapp/data_files/fake_data.csv")
-getwd()
-
-#Single Auto Point Bar Graph
 
 select<-449
 data <-raw|>
@@ -34,10 +33,13 @@ pivot_longer(cols=c(ALL,ALH,move),
 ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
     geom_bar(position="stack",stat="identity",width=0.3)+
     labs(title=paste("Auto Points for Team",select))
+```
 
+## Compare Auto Point Bar Graph
 
-#Compare Auto Point Bar Graph
-
+```{r}
+library(tidyverse)
+raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 select<-c(449,6767)
 
 data <-raw|>
@@ -57,9 +59,13 @@ pivot_longer(cols=c(ALL,ALH,move),
 ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
     geom_bar(position="stack",stat="identity",width=0.3)+
     labs(title=paste("Auto Points for Team",select))
+```
 
-#Single Endgame Point Bar Graph
+## Single Endgame Point Bar Graph
 
+```{r}
+library(tidyverse)
+raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 selected<-449
 
 data <-raw|>
@@ -89,8 +95,6 @@ ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
     geom_bar(position="stack",stat="identity",width=0.3)+
     labs(title=paste("Endgame Points for Team",selected),x="Team Number")+
     theme_bw()
-
-
 
 ```
 
