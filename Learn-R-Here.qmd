@@ -146,10 +146,10 @@ data <- raw |>
         auto_cycles = auto_lunites_missed + auto_lunites_high + auto_lunites_low,
         
         tele_cycles = 
-            teleop_preshutdown_high_lunites_scored +
-            teleop_preshutdown_low_lunites_scored + 
-            teleop_preshutdown_lunites_missed + 
-            teleop_preshutdown_lunites_passed +
+            pre_high_lunites_scored +
+            pre_low_lunites_scored + 
+            pre_lunites_missed + 
+            pre_lunites_passed +
             post_high_lunites_scored + 
             post_low_lunites_scored + 
             post_lunites_missed + 

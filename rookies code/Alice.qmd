@@ -15,14 +15,14 @@ raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 getwd()
 select = 449
 data <- raw|>
-select(teleop_preshutdown_high_lunites_scored,teleop_preshutdown_low_lunites_scored,teleop_preshutdown_lunites_missed,teleop_preshutdown_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_missed)|>
+select(pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_missed)|>
     filter(team_num == select)|>
 summarize(
     
-    tp_preshut_highls = mean(teleop_preshutdown_high_lunites_scored),
-    tp_preshut_lowls = mean(teleop_preshutdown_low_lunites_scored),
-    tp_preshut_lmiss = mean(teleop_preshutdown_lunites_missed),
-    tp_preshut_lpass = mean(teleop_preshutdown_lunites_passed),
+    tp_preshut_highls = mean(pre_high_lunites_scored),
+    tp_preshut_lowls = mean(pre_low_lunites_scored),
+    tp_preshut_lmiss = mean(pre_lunites_missed),
+    tp_preshut_lpass = mean(pre_lunites_passed),
     tp_postshut_highls = mean(post_high_lunites_scored),
     tp_postshut_lowls = mean(post_low_lunites_scored),
     tp_postshut_lmiss = mean(post_lunites_missed),
