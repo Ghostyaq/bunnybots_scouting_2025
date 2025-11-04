@@ -9,10 +9,16 @@ Thursdays
 
 Covered: Variables, Dataframes, Basic Shinyapp
 
-Section of Shinyapp to do: Boxplot, Comments, Dead
-
 ```{r}
-#test 123!!!
+raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 
-
+data <- raw |>
+    mutate(
+        total_score = 
+            auto_lunites_high * 7 + auto_lunites_low * 4 + pre_high_lunites_scored * 5 + pre_low_lunites_scored * 2 + post_high_lunites_scored * 5 + post_high_lunites_scored * 2 + moved * 4 + ifelse(end_position == "linked", 5, 0) 
+    ) |>
+select(match_number, team_number, total_score) |>
+    filter(team_number == 449)
+ggplot(data, aes(x = match_number, y = total_score)) +
+    geom_boxplot() + theme_bw()
 ```
