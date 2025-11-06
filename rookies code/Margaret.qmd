@@ -20,5 +20,20 @@ data <- raw |>
 select(match_number, team_number, total_score) |>
     filter(team_number == 449)
 ggplot(data, aes(x = match_number, y = total_score)) +
-    geom_boxplot() + theme_bw()
+        geom_boxplot() +
+    ggbeeswarm::geom_quasirandom(#created dots representing every match score
+                shape = 21, color = "white", 
+                alpha = 0.8, size = 3,
+                aes(fill = "red")
+            )  + theme_bw() +
+    labs(
+        title ="Score per Match", 
+        x = "Match Number",
+        y = "Total Score", 
+        fill = "Alliance Number"
+    )
+```
+
+```         
+geom_boxplot()
 ```

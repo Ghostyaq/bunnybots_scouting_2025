@@ -1,0 +1,33 @@
+---
+title: "Mitchell"
+format: html
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(polyglotr)
+
+data <- iris |>
+    mutate(
+        Sepal.Length = 1/Sepal.Length, 
+        Petal.Length = log10(Petal.Length), 
+        Sepal.Width = Sepal.Width^2, 
+        Petal.Width = Petal.Width,
+        Species = ifelse(
+            Species == "setosa", "сетоза", ifelse(
+                Species == "versicolor", "wielokolorowy", ifelse(
+                    Species == "virginica", "dziewica", "NA"
+                )
+            )
+        )
+    )
+
+ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Petal.Length, size = Species)) + 
+    geom_line() +
+    geom_point() + 
+    geom_boxplot() +
+    geom_violin() +
+    geom_bin2d() +
+    coord_polar()
+```

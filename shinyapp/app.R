@@ -107,6 +107,29 @@ server <- function(input, output) {
             geom_bar(position="stack",stat="identity",width=0.3)+
             labs(title=paste("Auto Points for Team",select))
     }
+    
+    boxplot <- function(raw, selection) {
+        data <- raw |>
+            mutate(
+                total_score = 
+                    auto_lunites_high * 7 + auto_lunites_low * 4 + pre_high_lunites_scored * 5 + pre_low_lunites_scored * 2 + post_high_lunites_scored * 5 + post_high_lunites_scored * 2 + moved * 4 + ifelse(end_position == "linked", 5, 0) 
+            ) |>
+            select(match_number, team_number, total_score) |>
+            filter(team_number == 449)
+        ggplot(data, aes(x = match_number, y = total_score)) +
+            geom_boxplot() +
+            ggbeeswarm::geom_quasirandom(#created dots representing every match score
+                shape = 21, color = "white", 
+                alpha = 0.8, size = 3,
+                aes(fill = "red")
+            )  + theme_bw() +
+            labs(
+                title ="Score per Match", 
+                x = "Match Number",
+                y = "Total Score", 
+                fill = "Alliance Number"
+            )
+    }
 }
 
 # Run the application 
