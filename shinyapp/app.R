@@ -18,26 +18,15 @@ ui <- fluidPage(
         tabPanel("Match",
             sidebarLayout(
                 sidebarPanel(
-                    sliderInput("bins1", "Number of bins:",min = 1,max = 50,value = 30)
+                    sliderInput("bins1", "Number of bins:", min = 1, max = 50, value = 30)
                 ),
                 mainPanel(
                     plotOutput("distPlot1")
                 )
             )
         ),
-               
-        tabPanel("Compare Teams",
-            sidebarLayout(
-                sidebarPanel(
-                    sliderInput("bins2", "Number of bins:",min = 1,max = 50,value = 30)
-                ),
-                mainPanel(
-                    plotOutput("distPlot2")
-                )
-            ),
-        ),
-               
-        tabPanel("Single Team",
+        
+        tabPanel("Compare Team",
             sidebarLayout(
                 sidebarPanel(
                     sliderInput("bins3","Number of bins:",min = 1,max = 50,value = 30)
@@ -47,45 +36,34 @@ ui <- fluidPage(
                 )
             )
         ),
+        tabPanel("Single Teams",
+                   sidebarLayout(
+                       sidebarPanel(
+                           selectInput("bins2", "Number of bins:", choices = NULL),
+                           selectInput("typeGraph", "Choose graph:", choices = c("Points Large Bar Graph", "Cylces graph"))
+                       ),
+                       mainPanel(
+                           plotOutput("Single Teams Graphs")
+                       )
+                   ),
+        ),
     ),
 )
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
-    
+server <- function(input, output, session) {
+    teams <- read.csv("data_files/fake_teams.csv")
     raw <- read.csv("data_files/fake_data.csv")
-
-    output$distPlot1 <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins1 + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
     
-    output$distPlot2 <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins2 + 1)
-        
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
+    observe({
+        updateSelectInput(session, "bins2", choices = teams$team[order(teams$team)])
     })
-    
-    output$distPlot3 <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins3 + 1)
+    output$'Single Teams Graphs' <- renderPlot({
         
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
+        
+        if (input$typeGraph == "Points Large Bar Graph") {
+            boxplot(raw, input$bins2)
+        }
     })
     
     #COMPARE TEAMS
@@ -115,7 +93,7 @@ server <- function(input, output) {
                     auto_lunites_high * 7 + auto_lunites_low * 4 + pre_high_lunites_scored * 5 + pre_low_lunites_scored * 2 + post_high_lunites_scored * 5 + post_high_lunites_scored * 2 + moved * 4 + ifelse(end_position == "linked", 5, 0) 
             ) |>
             select(match_number, team_number, total_score) |>
-            filter(team_number == 449)
+            filter(team_number == selection)
         ggplot(data, aes(x = match_number, y = total_score)) +
             geom_boxplot() +
             ggbeeswarm::geom_quasirandom(#created dots representing every match score
