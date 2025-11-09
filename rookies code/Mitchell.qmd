@@ -4,30 +4,48 @@ format: html
 ---
 
 ```{r}
+#install.packages("genzplyr") 
+# :)
+
 library(ggplot2)
 library(tidyverse)
 library(polyglotr)
+library(genzplyr)
 
 data <- iris |>
-    mutate(
+    glow_up(
         Sepal.Length = 1/Sepal.Length, 
         Petal.Length = log10(Petal.Length), 
         Sepal.Width = Sepal.Width^2, 
         Petal.Width = Petal.Width,
-        Species = ifelse(
+        `team are we locked in :wilted_rose_emoji:` = ifelse(
             Species == "setosa", "сетоза", ifelse(
                 Species == "versicolor", "wielokolorowy", ifelse(
                     Species == "virginica", "dziewica", "NA"
                 )
-            )
+                )
         )
-    )
+    ) |>
+    rowwise() |>
+    glow_up(`Goodie-Ness` = sample(c(0:2), size = 1), 
+           shapeness = sample((0:3), size = 1), 
+           sizeness = sample(c(0:10), size = 1)
+           ) |>
+    vibe_check(-Species)
+    
+    data$`Goodie-Ness` = factor(data$`Goodie-Ness`, levels = c(0, 1, 2))
+    
+ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = `Goodie-Ness`, size = `team are we locked in :wilted_rose_emoji:`)) + 
+    geom_point(shape = data$shapeness) +
+    coord_polar() + 
+    scale_color_manual(values = c("#93934a", "#4A412A", "#a9000a"), labels = c("bad", "excellent", "satisfatory")) +
+    labs(
+        x = "Coconuts scored in Reefscape",
+        y = "Species"
+    ) +
+    geom_boxplot(outliers = FALSE, box.linewidth = 0.5, whisker.linewidth = 0.5, staple.linewidth = 0.5) +
+    geom_line(size = 0.5) +
+    theme_minimal() +
+    annotate("text", x = 0.15, y = 16, label = "cookage")
 
-ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = Petal.Length, size = Species)) + 
-    geom_line() +
-    geom_point() + 
-    geom_boxplot() +
-    geom_violin() +
-    geom_bin2d() +
-    coord_polar()
 ```
