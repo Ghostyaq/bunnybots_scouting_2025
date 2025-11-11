@@ -1,0 +1,21 @@
+---
+title: "Chloe"
+format: html
+---
+
+```{r}
+raw <- read.csv("../Downloads/fake_data.csv")
+data <- raw |>
+  group_by(team_number) |>
+  summarise(
+    ha = round(mean(7*auto_lunites_high), digits = 2),
+    la = round(mean(4*auto_lunites_low), digits = 2),
+    hps = round(mean(5*pre_high_lunites_scored), digits = 2),
+    lps = round(mean(2*pre_low_lunites_scored), digits =2),
+    m = round(mean(4*moved), digits = 2),
+    phs = round(mean(5*post_high_lunites_scored), digits = 2),
+    pls = round(mean(2*post_low_lunites_scored), digits = 2),
+    ep = round(mean(5*ifelse(end_position == "linked", 1, 0)), digits = 2),
+  ) |>
+  filter(data, team_number == 449)
+```
