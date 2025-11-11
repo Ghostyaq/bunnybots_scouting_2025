@@ -24,7 +24,7 @@ select(auto_lunites_high,team_number,auto_lunites_low,moved)|>
         ALH=mean(auto_lunites_high)*7,
         ALL=mean(auto_lunites_low)*4,
         move=mean(moved)*4
-    )|>
+    ) |>
 
 pivot_longer(cols=c(ALL,ALH,move),
              names_to="type",
@@ -57,7 +57,7 @@ pivot_longer(cols=c(ALL,ALH,move),
              values_to="points")
 
 ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
-    geom_bar(position="stack",stat="identity",width=0.3)+
+    geom_bar(position="stack",stat="identity",width=0.3) +
     labs(title=paste("Auto Points for Team",select))
 ```
 

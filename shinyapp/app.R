@@ -15,6 +15,16 @@ in_rstudio <- requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAv
 ui <- fluidPage(
     navbarPage(theme = shinytheme("yeti"), 
                "449 Bunnybots Scouting",
+        tabPanel("Event Summary",
+            sidebarLayout(
+                sidebarPanel(
+                    sliderInput("bins1", "Number of bins:", min = 1, max = 50, value = 30)
+                ),
+                mainPanel(
+                    plotOutput("distPlot1")
+                )
+            )
+        ),
         tabPanel("Match",
             sidebarLayout(
                 sidebarPanel(
@@ -29,21 +39,20 @@ ui <- fluidPage(
         tabPanel("Compare Team",
             sidebarLayout(
                 sidebarPanel(
-                    sliderInput("bins3","Number of bins:",min = 1,max = 50,value = 30)
-                ),
+                    selectInput("bins2", "Number of bins:", choices = NULL),
+                    selectInput("typeGraph", "Choose graph:", choices = c("Points Large Bar Graph", "Cylces graph"))                ),
                 mainPanel(
-                    plotOutput("distPlot3")
+                    plotOutput("Single Teams Graphs")
                 )
             )
         ),
-        tabPanel("Single Teams",
+        tabPanel("Scouts",
                    sidebarLayout(
                        sidebarPanel(
-                           selectInput("bins2", "Number of bins:", choices = NULL),
-                           selectInput("typeGraph", "Choose graph:", choices = c("Points Large Bar Graph", "Cylces graph"))
+                           
                        ),
                        mainPanel(
-                           plotOutput("Single Teams Graphs")
+
                        )
                    ),
         ),
