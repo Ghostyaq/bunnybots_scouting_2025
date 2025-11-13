@@ -14,24 +14,27 @@ Section of Shinyapp to do: Tele-Op Pre & Post-Shutdown Lunite Bar Graph
 
 library(tidyverse)
 raw <- read.csv("../shinyapp/data_files/fake_data.csv")
-getwd()
-select = 449
-data <- raw|>
-select(pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_missed)|>
-    filter(team_num == select)|>
-summarize(
-    tp_preshut_highls = mean(pre_high_lunites_scored),
-    tp_preshut_lowls = mean(pre_low_lunites_scored),
-    tp_preshut_lmiss = mean(pre_lunites_missed),
-    tp_preshut_lpass = mean(pre_lunites_passed),
-    tp_postshut_highls = mean(post_high_lunites_scored),
-    tp_postshut_lowls = mean(post_low_lunites_scored),
-    tp_postshut_lmiss = mean(post_lunites_missed),
-    tp_postshut_lpass = mean(post_lunites_passed)
-)|>
-pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_preshut_lmiss, tp_preshut_lpass, tp_postshut_highls, tp_postshut_lowls, tp_postshut_lmiss, tp_postshut_lpass))
-ggplot(raw, aes(x = factor(team), y = points_score, fill = type)) +
-       geom_bar(position = "stack", stst = "identity", width = 0.3) +
-    labs(title = paste("Level Summary for Team", team_number), x = "Team", y = "Tele score", fill = "Points")
+
+selected = 1323
+data <- raw |>
+    select(team_number, pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_passed) |>
+    filter(team_number == selected) |>
+    summarize(
+        tp_preshut_highls = mean(pre_high_lunites_scored),
+        tp_preshut_lowls = mean(pre_low_lunites_scored),
+        tp_preshut_lmiss = mean(pre_lunites_missed),
+        tp_preshut_lpass = mean(pre_lunites_passed),
+        tp_postshut_highls = mean(post_high_lunites_scored),
+        tp_postshut_lowls = mean(post_low_lunites_scored),
+        tp_postshut_lmiss = mean(post_lunites_missed),
+        tp_postshut_lpass = mean(post_lunites_passed),
+    )|>
+    pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_preshut_lmiss, tp_preshut_lpass, tp_postshut_highls, tp_postshut_lowls, tp_postshut_lmiss, tp_postshut_lpass), names_to = "type", values_to = "points_score")
+
+data$team_number = selected
+
+ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
+       geom_bar(position = "stack", stat = "identity", width = 0.3) +
+    labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele score", fill = "Points")
        
 ```
