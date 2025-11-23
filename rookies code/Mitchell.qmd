@@ -49,3 +49,57 @@ ggplot(data, aes(x = Sepal.Length, y = Sepal.Width, color = `Goodie-Ness`, size 
     annotate("text", x = 0.15, y = 16, label = "cookage")
 
 ```
+
+```{r}
+library(tidyverse)
+raw <- read.csv("../shinyapp/data_files/fake_data.csv")
+selected = c(449)
+data <- raw |>
+    filter(team_number %in% selected) |>
+    group_by(team_number) |>
+    summarize(
+        auto_lows = mean(auto_lunites_low) * 4,
+        auto_high = mean(auto_lunites_high) * 7,
+        auto_missed = mean(auto_lunites_missed),
+        tele_highs = mean(pre_high_lunites_scored + post_high_lunites_scored) * 5,
+        tele_low = mean(pre_low_lunites_scored + post_low_lunites_scored) * 2,
+        tele_missed = mean(pre_lunites_missed + post_lunites_missed),
+        tele_passed = mean(pre_lunites_passed + post_lunites_passed),
+        move = mean(moved) * 4,
+        end = mean(end_position == "linked") * 5
+)|>
+pivot_longer(cols=c(move, end, auto_lows, auto_high, auto_missed, tele_highs, tele_low, tele_missed, tele_passed), names_to = "type", values_to = "points_score")
+
+
+ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
+       geom_bar(position = "stack", stat = "identity", width = 0.3) +
+    labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Score", fill = "Points") + 
+    scale_fill_manual(
+        values = c(
+        "plum1",
+        "plum3",
+        "plum4",
+        "#FFF68F",
+        "#FFC156",
+        "#3D5A80",
+        "#98C1D9",
+        "#7DAA92",
+        "#003B36"
+        ),
+        labels = c(
+            "auto_lows" = "Auto Low",
+            "auto_high" = "Auto High",
+            "auto_missed" = "Auto Missed",
+            "tele_highs" = "Tele High",
+            "tele_low" = "Tele Low",
+            "tele_missed" = "Tele Missed",
+            "tele_passed" = "Tele Passed",
+            "end" = "End",
+            "move" = "Move"
+        )
+            ) +
+    theme_bw()
+       
+
+
+```
