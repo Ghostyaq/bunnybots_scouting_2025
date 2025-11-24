@@ -15,7 +15,7 @@ Section of Shinyapp to do: **Auto Bar Graph**, Sectioned Colored Bar Graph (Scor
 library(tidyverse)
 raw <- read.csv("../shinyapp/data_files/fake_data.csv")
 
-select<-449
+select<-2106
 data <-raw|>
 select(auto_lunites_high,team_number,auto_lunites_low,moved)|>
     filter(team_number==select)|>
@@ -40,7 +40,7 @@ ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
 ```{r}
 library(tidyverse)
 raw <- read.csv("../shinyapp/data_files/fake_data.csv")
-select<-c(449,6767)
+select<-c(449,6767,422)
 
 data <-raw|>
 select(auto_lunites_high,team_number,auto_lunites_low,moved)|>
@@ -107,4 +107,23 @@ raw<-murders|>
 ggplot(raw,aes(x=total,y=population))+
     geom_point()+
     geom_text(aes(label=abb))
+```
+
+```{r}
+getwd()
+raw<-read.csv("/cloud/project/shinyapp/data_files/fake_data.csv")
+
+select<-449
+
+data<- raw |> filter(team_number==select)|>
+    mutate(auto_cycles=auto_lunites_high+auto_lunites_low+auto_lunites_missed
+           ,teleop_cycles=pre_high_lunites_scored+pre_low_lunites_scored+pre_lunites_missed+pre_lunites_passed+post_high_lunites_scored+post_low_lunites_scored+post_lunites_missed+post_lunites_passed,
+           total_cycles=auto_cycles+teleop_cycles)|>
+    select(match_number,auto_cycles,teleop_cycles,total_cycles)
+
+ggplot(data,aes(x=match_number))+
+    geom_line(aes(y=auto_cycles,color="red"))+
+    geom_line(aes(y=teleop_cycles),color="darkgreen",show.legend = TRUE)+
+    geom_line(aes(y=total_cycles),color="black",show.legend = TRUE)+
+    labs(x="Match Number", y="Cycles")
 ```

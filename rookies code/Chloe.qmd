@@ -4,9 +4,15 @@ format: html
 ---
 
 ```{r}
+<<<<<<< HEAD
 library(tidyverse)
 
 raw <- read.csv("../Downloads/fake_data.csv")
+=======
+library(ggplot2)
+library(tidyverse)
+raw <- read.csv("../shinyapp/data_files/fake_data.csv")
+>>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
 data <- raw |>
   group_by(team_number) |>
   summarize(
@@ -29,6 +35,9 @@ pivot_longer(cols=c(ha,la,hps,lps,phs,pls,ep,m),
 ggplot(data, aes(x = team_number, y = points, fill = score_method))+
 geom_bar(position = "stack", stat = "identity")+
 scale_fill_manual(values=c("red", "darkred", "lightgreen","darkgreen","lightblue","darkblue","lavender", "purple"))
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
 ```
