@@ -15,11 +15,6 @@ ui <- fluidPage(
     navbarPage(theme = shinytheme("yeti"), 
                "449 Bunnybots Scouting",
         tabPanel("Event Summary",
-<<<<<<< HEAD
-            sidebarLayout(
-                sidebarPanel(
-                    sliderInput("bins1", "Number of bins:", min = 1, max = 50, value = 30)
-=======
             fluidRow(
                 column(12,
                     plotOutput("event_summary"),
@@ -40,7 +35,6 @@ ui <- fluidPage(
                         condition = "input.selected_mode != 'Playoffs'",
                         numericInput("selected_match", "Match Number", value = 1, min = 0),
                     )
->>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
                 ),
                 mainPanel(
                     uiOutput("score_prediction"),
@@ -56,13 +50,7 @@ ui <- fluidPage(
         ),
         tabPanel("Match",
             sidebarLayout(
-                sidebarPanel(
-<<<<<<< HEAD
-                    sliderInput("bins1", "Number of bins:", min = 1, max = 50, value = 30)
-                ),
                 mainPanel(
-                    plotOutput("distPlot1")
-=======
                     pickerInput("teams_selected", "Select Team", choices = NULL, multiple = TRUE, options = list(maxOptions = 2)),
                     selectInput("compare_teams_graph", "Choose Graph", choices = c("Cycles Over Time")),
                 ),
@@ -75,17 +63,7 @@ ui <- fluidPage(
                 )
             ),
         ),
-        
-        tabPanel("Scouts",
-            fluidRow(
-                column(12,
-                     plotOutput("scouts_num")
->>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
-                )
-            ),
-        ),
-<<<<<<< HEAD
-        
+    
         tabPanel("Compare Team",
             sidebarLayout(
                 sidebarPanel(
@@ -97,39 +75,20 @@ ui <- fluidPage(
             )
         ),
         tabPanel("Scouts",
-                   sidebarLayout(
-                       sidebarPanel(
-                           
-                       ),
-                       mainPanel(
-
-                       )
-                   ),
-        ),
-    ),
-=======
+                 fluidRow(
+                     column(12,
+                            plotOutput("scouts_num")
+                     )
+                 ),
+        )
     )
->>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-<<<<<<< HEAD
     teams <- read.csv("data_files/fake_teams.csv")
     raw <- read.csv("data_files/fake_data.csv")
-    
-    observe({
-        updateSelectInput(session, "bins2", choices = teams$team[order(teams$team)])
-    })
-    output$'Single Teams Graphs' <- renderPlot({
-        
-        
-        if (input$typeGraph == "Points Large Bar Graph") {
-            boxplot(raw, input$bins2)
-        }
-=======
-    raw <- read.csv("data_files/fake_data.csv")
-    
+
     observe({
         updatePickerInput(session, "teams_selected", choices = sort(unique(raw$team_number)))
         updatePickerInput(session, "team_selected", choices = sort(unique(raw$team_number)))
@@ -153,7 +112,6 @@ server <- function(input, output, session) {
     
     output$score_prediction <- renderUI({
         
->>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
     })
     
     output$match_boxplot <- renderPlot({
@@ -331,14 +289,11 @@ server <- function(input, output, session) {
                     moved * 4 + ifelse(end_position == "linked", 5, 0),
                 team_number = factor(team_number, levels = selection)
             ) |>
-<<<<<<< HEAD
             select(match_number, team_number, total_score) |>
             filter(team_number == selection)
         ggplot(data, aes(x = match_number, y = total_score)) +
-=======
             select(match_number, team_number, total_score)
         ggplot(data, aes(x = total_score, y = team_number)) +
->>>>>>> 3b1957448b7e0f62dfefcb43eea1f5c4c53ce462
             geom_boxplot() +
             ggbeeswarm::geom_quasirandom(#created dots representing every match score
                 shape = 21, color = "white", 
