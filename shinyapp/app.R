@@ -48,11 +48,10 @@ ui <- fluidPage(
                 )
             )
         ),
-        tabPanel("Match",
+        tabPanel("Compare Teams",
             sidebarLayout(
-                mainPanel(
+                sidebarPanel(
                     pickerInput("teams_selected", "Select Team", choices = NULL, multiple = TRUE, options = list(maxOptions = 2)),
-                    selectInput("compare_teams_graph", "Choose Graph", choices = c("Cycles Over Time")),
                 ),
                 mainPanel(
                     plotOutput("compare_boxplots"),
@@ -63,17 +62,7 @@ ui <- fluidPage(
                 )
             ),
         ),
-    
-        tabPanel("Compare Team",
-            sidebarLayout(
-                sidebarPanel(
-                    selectInput("bins2", "Number of bins:", choices = NULL),
-                    selectInput("typeGraph", "Choose graph:", choices = c("Points Large Bar Graph", "Cylces graph"))                ),
-                mainPanel(
-                    plotOutput("Single Teams Graphs")
-                )
-            )
-        ),
+
         tabPanel("Scouts",
                  fluidRow(
                      column(12,
@@ -88,6 +77,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     teams <- read.csv("data_files/fake_teams.csv")
     raw <- read.csv("data_files/fake_data.csv")
+    schedule <- read.csv("data_files/fake_schedule.csv")
 
     observe({
         updatePickerInput(session, "teams_selected", choices = sort(unique(raw$team_number)))
@@ -123,11 +113,14 @@ server <- function(input, output, session) {
     })
     
     output$match_auto_pts <- renderPlot({
+        match <- input$selected_match 
+        auto_bar_graph(raw, schedule[match, 2:5] )
         
     })
     
     output$match_tele_cycles <- renderPlot({
-        
+        match <- input$selected_match
+        tele_cycles_graph(raw, schedule[match, 2:5])
     })
     
     output$match_tele_pts <- renderPlot({
@@ -225,7 +218,7 @@ server <- function(input, output, session) {
                          values_to="points")
         
         ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
-            geom_bar(position="stack",stat="identity",width=0.3)+
+            geom_bar(position="stack",stat="identity")+
             labs(title= paste("Auto Points for Team", data$team_number))
     }
     
@@ -250,7 +243,7 @@ server <- function(input, output, session) {
                          values_to="points")
         
         ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
-            geom_bar(position="stack", stat="identity",width=0.3)+
+            geom_bar(position="stack", stat="identity")+
             labs(title = paste("Endgame Points for Team", selection), x="Team Number") +
             theme_bw()
     }
@@ -289,9 +282,6 @@ server <- function(input, output, session) {
                     moved * 4 + ifelse(end_position == "linked", 5, 0),
                 team_number = factor(team_number, levels = selection)
             ) |>
-            select(match_number, team_number, total_score) |>
-            filter(team_number == selection)
-        ggplot(data, aes(x = match_number, y = total_score)) +
             select(match_number, team_number, total_score)
         ggplot(data, aes(x = total_score, y = team_number)) +
             geom_boxplot() +
@@ -306,6 +296,28 @@ server <- function(input, output, session) {
                 y = "Team Number", 
                 fill = "Alliance Number"
             )
+    }
+        tele_cycles_graph <- function(raw, selected){
+            
+        data <- raw |>
+            select(team_number, pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_passed) |>
+            filter(team_number %in% selected) |>
+            group_by(team_number)|>
+            summarize(
+                tp_preshut_highls = mean(pre_high_lunites_scored),
+                tp_preshut_lowls = mean(pre_low_lunites_scored),
+                tp_preshut_lmiss = mean(pre_lunites_missed),
+                tp_preshut_lpass = mean(pre_lunites_passed),
+                tp_postshut_highls = mean(post_high_lunites_scored),
+                tp_postshut_lowls = mean(post_low_lunites_scored),
+                tp_postshut_lmiss = mean(post_lunites_missed),
+                tp_postshut_lpass = mean(post_lunites_passed),
+            )|>
+            pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_preshut_lmiss, tp_preshut_lpass, tp_postshut_highls, tp_postshut_lowls, tp_postshut_lmiss, tp_postshut_lpass), names_to = "type", values_to = "points_score")
+        ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
+            geom_bar(position = "stack", stat = "identity") +
+            labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele score", fill = "Points")+
+            scale_fill_manual(values=c("lightblue", "blue", "pink", "red", "lightgreen","darkgreen", "lavender", "violet"))
     }
     
     modified <- raw |>

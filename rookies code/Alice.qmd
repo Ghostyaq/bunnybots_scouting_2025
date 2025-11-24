@@ -35,6 +35,7 @@ data$team_number = selected
 
 ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
        geom_bar(position = "stack", stat = "identity", width = 0.3) +
-    labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele score", fill = "Points")
+    labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele score", fill = "Points")+
+    scale_fill_manual(values=c("lightblue", "blue", "pink", "red", "lightgreen","darkgreen", "lavender", "violet"))
        
 ```
