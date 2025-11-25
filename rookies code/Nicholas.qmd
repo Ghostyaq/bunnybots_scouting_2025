@@ -24,7 +24,7 @@ select(auto_lunites_high,team_number,auto_lunites_low,moved)|>
         ALH=mean(auto_lunites_high)*7,
         ALL=mean(auto_lunites_low)*4,
         move=mean(moved)*4
-    ) |>
+    )|>
 
 pivot_longer(cols=c(ALL,ALH,move),
              names_to="type",
@@ -57,7 +57,7 @@ pivot_longer(cols=c(ALL,ALH,move),
              values_to="points")
 
 ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
-    geom_bar(position="stack",stat="identity",width=0.3) +
+    geom_bar(position="stack",stat="identity",width=0.3)+
     labs(title=paste("Auto Points for Team",select))
 ```
 
@@ -126,4 +126,37 @@ ggplot(data,aes(x=match_number))+
     geom_line(aes(y=teleop_cycles),color="darkgreen",show.legend = TRUE)+
     geom_line(aes(y=total_cycles),color="black",show.legend = TRUE)+
     labs(x="Match Number", y="Cycles")
+```
+
+```{r}
+extra_raw <- read.csv("../shinyapp/data_files/fake_data.csv")
+raw<-extra_raw
+raw<-raw|>select("scout_initials")
+data<-group_by(raw,scout_initials)|>
+    count(scout_initials)|>
+      arrange(desc(n))
+
+data$scout_initials<-factor(data$scout_initials,levels=data$scout_initials)
+
+ggplot(data,aes(x=factor(scout_initials),y=n,fill="navy"))+
+    geom_histogram(position="stack",stat="identity",width=0.3)+
+    labs(x="Scout Initials", y="Times")+
+    scale_fill_manual(values="navy")
+
+```
+
+```{r}
+raw<- read.csv("../shinyapp/data_files/fake_data.csv")
+raw<-raw|>select("scout_initials","commentsOpen")|>
+  mutate(comment_count=nchar(commentsOpen))|>
+    group_by(scout_initials)|>
+      summarize(characters=mean(comment_count))|>
+        arrange(desc(characters))
+
+raw$scout_initials<-factor(raw$scout_initials,levels=raw$scout_initials)
+
+ggplot(raw,aes(x=factor(scout_initials),y=characters,fill="navy"))+
+    geom_histogram(position="stack",stat="identity",width=0.3,)+
+    labs(x="Scout Initials", y="Characters",title=paste("Number of Yaps by Scout"))+
+    scale_fill_manual(values="navy")
 ```

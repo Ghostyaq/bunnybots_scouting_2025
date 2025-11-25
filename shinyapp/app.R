@@ -67,7 +67,8 @@ ui <- fluidPage(
         tabPanel("Scouts",
                  fluidRow(
                      column(12,
-                            plotOutput("scouts_num")
+                            plotOutput("scouts_num"),
+                            plotOutput("yap_graph")
                      )
                  ),
         )
@@ -248,6 +249,14 @@ server <- function(input, output, session) {
     
     output$compare_comments <- renderPlot({
         teams <- input$teams_selected
+    })
+    
+    output$scouts_num<-renderPlot({
+        create_scouts(raw)
+    })
+    
+    output$yap_graph<-renderPlot({
+        create_yap(raw)
     })
     
     all_pts <- function(raw, selection, flipped){
@@ -518,6 +527,35 @@ server <- function(input, output, session) {
                 linked = paste(sum(end_position == "linked"),"/",n())
             )
     }
+}
+
+create_scouts<-function(raw) {
+    raw<-raw|>select("scout_initials")
+    data<-group_by(raw,scout_initials)|>
+        count(scout_initials)|>
+        arrange(desc(n))
+    
+    data$scout_initials<-factor(data$scout_initials,levels=data$scout_initials)
+    
+    ggplot(data,aes(x=factor(scout_initials),y=n,fill="navy"))+
+        geom_histogram(position="stack",stat="identity")+
+        labs(x="Scout Initials", y="Times")+
+        scale_fill_manual(values="navy")
+}
+
+create_yap<-function(raw) {
+    raw<-raw|>select("scout_initials","commentsOpen")|>
+        mutate(comment_count=nchar(commentsOpen))|>
+        group_by(scout_initials)|>
+        summarize(characters=mean(comment_count))|>
+        arrange(desc(characters))
+    
+    raw$scout_initials<-factor(raw$scout_initials,levels=raw$scout_initials)
+    
+    ggplot(raw,aes(x=factor(scout_initials),y=characters,fill="navy"))+
+        geom_histogram(position="stack",stat="identity")+
+        labs(x="Scout Initials", y="Characters",title=paste("Number of Yaps by Scout"))+
+        scale_fill_manual(values="navy")
 }
 
 # Run the application 
