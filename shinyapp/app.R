@@ -7,6 +7,7 @@ library(scales)
 library(shinyWidgets)
 library(tidyverse)
 library(shinythemes)
+library(ggbeeswarm)
 
 blair_red <- "#a7000a"
 in_rstudio <- requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()
@@ -125,9 +126,9 @@ server <- function(input, output, session) {
                "<span style='color:black;'>", " - ", 
                "<span style='color:blue;'>", round(blue_alliance_score, digits = 0),
                "<span style='color:black;'>", "\tPredicted Cycles: ", 
-               "<span style='color:red;'>", round(red_alliance_cycles, digits = 2), 
+               "<span style='color:red;'>", round(red_alliance_cycles, digits = 0), 
                "<span style='color:black;'>", " - ", 
-               "<span style='color:blue;'>", round(blue_alliance_cycles, digits = 2))
+               "<span style='color:blue;'>", round(blue_alliance_cycles, digits = 0))
     })
     
     output$match_boxplot <- renderPlot({
@@ -186,7 +187,6 @@ server <- function(input, output, session) {
                     lengthChange = FALSE, 
                     rowNames = FALSE, 
                     scrollX = TRUE, 
-                    scrollY = 500, 
                     pageLength = nrow(create_modified(data))))
     })
     
@@ -216,7 +216,7 @@ server <- function(input, output, session) {
                             "CG Issues"
                         }, ""
                     ),
-                `Specific Comments` = comments_open
+                `Specific Comments` = commentsOpen
             ) |>
             select(Team, Match, `General Comments`, `Specific Comments`)
         
@@ -529,33 +529,37 @@ server <- function(input, output, session) {
     }
 }
 
-create_scouts<-function(raw) {
-    raw<-raw|>select("scout_initials")
-    data<-group_by(raw,scout_initials)|>
-        count(scout_initials)|>
+create_scouts <- function(raw) {
+    raw <- raw |>
+        select("scout_initials")
+    data <- group_by(raw, scout_initials) |>
+        count(scout_initials) |>
         arrange(desc(n))
     
-    data$scout_initials<-factor(data$scout_initials,levels=data$scout_initials)
+    data$scout_initials <- factor(data$scout_initials, levels = data$scout_initials)
     
-    ggplot(data,aes(x=factor(scout_initials),y=n,fill="navy"))+
-        geom_histogram(position="stack",stat="identity")+
-        labs(x="Scout Initials", y="Times")+
-        scale_fill_manual(values="navy")
+    ggplot(data, aes(x = factor(scout_initials), y = n, fill = "navy"))+
+        geom_histogram(position = "stack", stat = "identity") +
+        labs(x = "Scout Initials", y = "Times", title = "Scout Summary") +
+        scale_fill_manual(values="navy") + 
+        theme_bw()
 }
 
-create_yap<-function(raw) {
-    raw<-raw|>select("scout_initials","commentsOpen")|>
-        mutate(comment_count=nchar(commentsOpen))|>
-        group_by(scout_initials)|>
-        summarize(characters=mean(comment_count))|>
+create_yap <- function(raw) {
+    raw <-raw |>
+        select("scout_initials", "commentsOpen") |>
+        mutate(comment_count = nchar(commentsOpen)) |>
+        group_by(scout_initials) |>
+        summarize(characters = mean(comment_count)) |>
         arrange(desc(characters))
     
-    raw$scout_initials<-factor(raw$scout_initials,levels=raw$scout_initials)
+    raw$scout_initials<-factor(raw$scout_initials, levels=raw$scout_initials)
     
-    ggplot(raw,aes(x=factor(scout_initials),y=characters,fill="navy"))+
-        geom_histogram(position="stack",stat="identity")+
-        labs(x="Scout Initials", y="Characters",title=paste("Number of Yaps by Scout"))+
-        scale_fill_manual(values="navy")
+    ggplot(raw, aes(x = factor(scout_initials), y = characters, fill = "navy")) +
+        geom_histogram(position = "stack", stat = "identity") +
+        labs(x = "Scout Initials", y="Characters",title = paste("Number of Yaps by Scout")) +
+        scale_fill_manual(values = "navy") + 
+        theme_bw()
 }
 
 # Run the application 
