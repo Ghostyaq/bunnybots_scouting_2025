@@ -320,11 +320,12 @@ server <- function(input, output, session) {
             filter(team_number %in% selection) |>
             group_by(team_number) |>
             summarize(
-                ALH=mean(auto_lunites_high)*7,
-                ALL=mean(auto_lunites_low)*4,
-                move=mean(moved)*4
+                auto_lunites_high=mean(auto_lunites_high),
+                auto_lunites_low=mean(auto_lunites_low),
+                auto_lunites_missed=mean(auto_lunites_missed),
+                moved=mean(moved)
             )|>
-            pivot_longer(cols=c(ALL,ALH,move),
+            pivot_longer(cols=c(auto_lunites_high, auto_lunites_missed, auto_lunites_low,moved),
                          names_to="type",
                          values_to="points")
         
@@ -332,7 +333,16 @@ server <- function(input, output, session) {
             geom_bar(position="stack",stat="identity")+
             labs(title = paste("Auto Points for Team", data$team_number),
                  x = "Team", y = "Auto Points") +
-            theme_bw()
+            theme_bw()+
+            scale_fill_manual(
+                values = c(
+                    "plum1", "plum3", "plum4", "#FFC156"
+                ),
+                labels = c(
+                    "auto_lunites_low" = "Auto Low", "auto_lunites_high" = "Auto High",
+                    "auto_lunites_missed" = "Auto Missed", "moved" = "Move"
+                ))+
+            labs(fill="Score")
     }
     
     endgame_bar_graph <- function(raw,selection) {
@@ -421,19 +431,36 @@ server <- function(input, output, session) {
             group_by(team_number)|>
             summarize(
                 tp_preshut_highls = mean(pre_high_lunites_scored),
-                tp_preshut_lowls = mean(pre_low_lunites_scored),
-                tp_preshut_lmiss = mean(pre_lunites_missed),
-                tp_preshut_lpass = mean(pre_lunites_passed),
                 tp_postshut_highls = mean(post_high_lunites_scored),
+                tp_preshut_lowls = mean(pre_low_lunites_scored),
                 tp_postshut_lowls = mean(post_low_lunites_scored),
+                tp_preshut_lmiss = mean(pre_lunites_missed),
                 tp_postshut_lmiss = mean(post_lunites_missed),
+                tp_preshut_lpass = mean(pre_lunites_passed),
                 tp_postshut_lpass = mean(post_lunites_passed),
             )|>
             pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_preshut_lmiss, tp_preshut_lpass, tp_postshut_highls, tp_postshut_lowls, tp_postshut_lmiss, tp_postshut_lpass), names_to = "type", values_to = "points_score")
         ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
             geom_bar(position = "stack", stat = "identity") +
-            labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele Cycles", fill = "Points")+
-            scale_fill_manual(values=c("lightblue", "blue", "pink", "red", "lightgreen","darkgreen", "lavender", "violet")) +
+            labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele Cycles", fill = "Score")+
+            scale_fill_manual(
+                values = c(
+                    "#3D5A80","#2b405c",
+                    "#98C1D9","#80a5ba",
+                    "#7DAA92","#517362",
+                    "#026960","#003B36"
+                ),
+                labels = c(
+                    "tp_preshut_highls" = "Preshutdown High",
+                    "tp_preshut_lowls" = "Preshutdown Low", 
+                    "tp_preshut_lmiss" = "Preshutdown Missed",
+                    "tp_preshut_lpass" = "Preshutdown Passed",
+                    "tp_postshut_highls" = "Postshutdown High",
+                    "tp_postshut_lowls" = "Postshutdown Low", 
+                    "tp_postshut_lmiss" = "Postshutdown Missed",
+                    "tp_postshut_lpass" = "Postshutdown Passed"
+                )
+            ) +
             theme_bw()
     }
     
@@ -453,7 +480,7 @@ server <- function(input, output, session) {
             geom_bar(position = "stack", stat = "identity") +
             labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele Points", fill = "Points")+
             scale_fill_manual(
-                values=c("lightblue", "blue", "lavender", "violet"),
+                values=c("#3D5A80","#98C1D9", "#7DAA92", "#003B36"),
                 labels = c("tp_preshut_highls" = "Pre-Shutdown High",
                            "tp_preshut_lowls" = "Pre-Shutdown Low",
                            "tp_postshut_highls" = "Post-Shutdown High",
@@ -538,11 +565,12 @@ create_scouts <- function(raw) {
     
     data$scout_initials <- factor(data$scout_initials, levels = data$scout_initials)
     
-    ggplot(data, aes(x = factor(scout_initials), y = n, fill = "navy"))+
+    p<-ggplot(data, aes(x = factor(scout_initials), y = n, fill = "navy"))+
         geom_histogram(position = "stack", stat = "identity") +
         labs(x = "Scout Initials", y = "Times", title = "Scout Summary") +
-        scale_fill_manual(values="navy") + 
+        scale_fill_manual(values="blue3") + 
         theme_bw()
+    p + theme(legend.position = "none")
 }
 
 create_yap <- function(raw) {
@@ -555,11 +583,12 @@ create_yap <- function(raw) {
     
     raw$scout_initials<-factor(raw$scout_initials, levels=raw$scout_initials)
     
-    ggplot(raw, aes(x = factor(scout_initials), y = characters, fill = "navy")) +
+    p<-ggplot(raw, aes(x = factor(scout_initials), y = characters, fill = "navy")) +
         geom_histogram(position = "stack", stat = "identity") +
         labs(x = "Scout Initials", y="Characters",title = paste("Number of Yaps by Scout")) +
         scale_fill_manual(values = "navy") + 
         theme_bw()
+    p + theme(legend.position = "none")
 }
 
 # Run the application 
