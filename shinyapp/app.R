@@ -316,7 +316,7 @@ server <- function(input, output, session) {
     #COMPARE TEAMS
     auto_bar_graph <- function(raw, selection) {
         data <- raw |>
-            select(auto_lunites_high,team_number,auto_lunites_low,moved) |>
+            select(auto_lunites_high,team_number,auto_lunites_low,moved, auto_lunites_missed) |>
             filter(team_number %in% selection) |>
             group_by(team_number) |>
             summarize(
@@ -341,9 +341,9 @@ server <- function(input, output, session) {
                 labels = c(
                     "auto_lunites_low" = "Auto Low", "auto_lunites_high" = "Auto High",
                     "auto_lunites_missed" = "Auto Missed", "moved" = "Move"
-                ))+
+                )) +
             labs(fill="Score")
-    }
+        }
     
     endgame_bar_graph <- function(raw,selection) {
         data <- raw|>
@@ -550,9 +550,62 @@ server <- function(input, output, session) {
                     ), digits = 2),
                 
                 taxid = paste(sum(moved),"/",n()),
+                auto_cycles = 
+                    round(mean(
+                        auto_lunites_high + auto_lunites_low + 
+                            auto_lunites_missed), digits = 2),
+                tele_cycles = 
+                    round(mean(
+                        pre_high_lunites_scored + pre_low_lunites_scored + 
+                        pre_lunites_missed + post_lunites_passed +
+                        pre_lunites_passed + post_high_lunites_scored +
+                        post_low_lunites_scored + post_lunites_missed
+                    ), digits = 2),
+                total_high = 
+                    round(mean(
+                        auto_lunites_high + pre_high_lunites_scored +
+                        post_high_lunites_scored), digits = 2),
+                total_low = 
+                    round(mean(
+                        auto_lunites_low + pre_low_lunites_scored +
+                        post_low_lunites_scored), digits = 2),
+                total_missed = 
+                    round(mean(
+                        auto_lunites_missed + pre_lunites_missed +
+                        post_lunites_missed), digits = 2),
+                total_passed = 
+                    round(mean(
+                        pre_lunites_passed + post_lunites_passed), digits = 2),
+                #total_shutoff = 
+                #    sum(
+                #        unlist(lapply(
+                #            c(which(team_number == schedule$R1), 
+                #              which(team_number == schedule$R2), 
+                #              which(team_number == schedule$B1), 
+                ##              which(team_number == schedule$B2)),
+                 #           determine_shutoff, 
+                 #           raw = raw, 
+                 #           team = team_number))),
                 ground = paste(sum(ground_intake_auto), "/", n()),
                 linked = paste(sum(end_position == "linked"),"/",n())
             )
+    }
+    
+    determine_shutoff <- function(raw, team, match) {
+        if (team %in% c(schedule[match, ]$R1, schedule[match, ]$R2)) {
+            opponents = c(schedule[match, ]$B1, schedule[match, ]$B2)
+        } else {
+            opponents = c(schedule[match, ]$R1, schedule[match, ]$R2)
+        }
+        
+        data <- raw[raw$match_number == match, ]
+        opponents_post_score = 
+            sum(
+                data[data$team_number %in% opponents,]$post_high_lunites_scored + 
+                data[data$team_number %in% opponents,]$post_low_lunites_scored + 
+                data[data$team_number %in% opponents,]$post_lunites_missed + 
+                data[data$team_number %in% opponents,]$post_lunites_passed)
+        ifelse(opponents_post_score == 0, FALSE, TRUE)
     }
 }
 
