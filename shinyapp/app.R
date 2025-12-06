@@ -296,7 +296,7 @@ server <- function(input, output, session) {
                 tele_missed = mean(pre_lunites_missed + post_lunites_missed),
                 tele_passed = mean(pre_lunites_passed + post_lunites_passed),
                 move = mean(moved) * 4,
-                end = mean(end_position == "L") * 5,
+                end = mean(end_position == "L") * 5 + mean(bunnies_inside * 6),
                 avg_score = auto_low + auto_high + auto_missed + tele_highs +
                     tele_low + tele_missed + tele_passed + move + end
             )|>
@@ -571,7 +571,8 @@ server <- function(input, output, session) {
                         pre_lunites_passed * 0 + post_high_lunites_scored * 5 +
                         post_low_lunites_scored * 2 + post_lunites_missed * 0 +
                         post_lunites_passed * 0 + moved * 4 + 
-                        ifelse(end_position == "L", 5, 0)
+                        ifelse(end_position == "L", 5, 0) +
+                        bunnies_inside * 6
                     ), digits = 2),
                 
                 taxid = paste(sum(moved),"/",n()),
