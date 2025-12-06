@@ -283,7 +283,7 @@ server <- function(input, output, session) {
         create_yap(raw)
     })
     
-    all_pts <- function(raw, selection, flipped){
+    all_pts <- function(raw, selection, is_event_summary){
         data <- raw |>
             filter(team_number %in% selection) |>
             group_by(team_number) |>
@@ -306,18 +306,35 @@ server <- function(input, output, session) {
                     tele_low, tele_missed, tele_passed), 
                 names_to = "type", values_to = "points_score")
         
-        unique_teams <- data |>
-            select(team_number, avg_score) |>
-            distinct() |>
-            arrange(desc(avg_score))
+        if (is_event_summary){
+            unique_teams <- data |>
+                select(team_number, avg_score) |>
+                distinct() |>
+                arrange(desc(avg_score))
+        } else {
+            unique_teams <- data |>
+                select(team_number, avg_score) |>
+                distinct()
+        }
         
         # Use the unique sorted teams to create a proper factor
         data$team_number <- factor(data$team_number, 
                                levels = unique_teams$team_number, 
                                ordered = TRUE)
+        
+        if(length(selection) == 4){
+            data <- data |>
+                mutate(
+                    alliance_color = factor(ifelse(
+                        team_number %in% c(selection[1], selection[2]), 
+                        "red", 
+                        "blue"), levels = c("red", "blue"))
+                    )
+        } else {data <- data |> mutate(alliance_color = "black")}
 
         ggplot(data, aes(x = team_number, y = points_score, fill = type)) +
-            geom_bar(position = "stack", stat = "identity") +
+            geom_bar(position = "stack", stat = "identity",
+                     color = data$alliance_color) +
             labs(title = "Level Summary", x = "Teams", y = "Points") + 
             scale_fill_manual(
                 values = c(
@@ -331,8 +348,8 @@ server <- function(input, output, session) {
                     "tele_passed" = "Tele Passed", "end" = "End", "move" = "Move"
                 )
             ) +
-            {if(flipped) coord_flip()} + 
-            theme_bw()
+            {if(is_event_summary) coord_flip()} + 
+            theme_bw() 
     }
         
     
@@ -353,8 +370,18 @@ server <- function(input, output, session) {
                          names_to="type",
                          values_to="points")
         
+        if(length(selection) == 4){
+            data <- data |>
+                mutate(
+                    alliance_color = factor(ifelse(
+                        team_number %in% c(selection[1], selection[2]), 
+                        "red", 
+                        "blue"), levels = c("red", "blue"))
+                )
+        } else {data <- data |> mutate(alliance_color = "black")}
+        
         ggplot(data, aes(x=factor(team_number),y=points, fill=type))+
-            geom_bar(position="stack",stat="identity")+
+            geom_bar(position="stack",stat="identity", color = data$alliance_color)+
             labs(title = paste("Auto Points for Team", data$team_number),
                  x = "Team", y = "Auto Points") +
             theme_bw()+
@@ -448,10 +475,10 @@ server <- function(input, output, session) {
             )
     }
     
-    tele_cycles_graph <- function(raw, selected){
+    tele_cycles_graph <- function(raw, selection){
         data <- raw |>
             select(team_number, pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_passed) |>
-            filter(team_number %in% selected) |>
+            filter(team_number %in% selection) |>
             group_by(team_number)|>
             summarize(
                 tp_preshut_highls = mean(pre_high_lunites_scored),
@@ -464,8 +491,19 @@ server <- function(input, output, session) {
                 tp_postshut_lpass = mean(post_lunites_passed),
             )|>
             pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_preshut_lmiss, tp_preshut_lpass, tp_postshut_highls, tp_postshut_lowls, tp_postshut_lmiss, tp_postshut_lpass), names_to = "type", values_to = "points_score")
+        
+        if(length(selection) == 4){
+            data <- data |>
+                mutate(
+                    alliance_color = factor(ifelse(
+                        team_number %in% c(selection[1], selection[2]), 
+                        "red", 
+                        "blue"), levels = c("red", "blue"))
+                )
+        } else {data <- data |> mutate(alliance_color = "black")}
+
         ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
-            geom_bar(position = "stack", stat = "identity") +
+            geom_bar(position = "stack", stat = "identity", color = data$alliance_color) +
             labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele Cycles", fill = "Score")+
             scale_fill_manual(
                 values = c(
@@ -488,10 +526,10 @@ server <- function(input, output, session) {
             theme_bw()
     }
     
-    tele_pts_graph <- function(raw, selected){
+    tele_pts_graph <- function(raw, selection){
         data <- raw |>
             select(team_number, pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_passed) |>
-            filter(team_number %in% selected) |>
+            filter(team_number %in% selection) |>
             group_by(team_number)|>
             summarize(
                 tp_preshut_highls = mean(pre_high_lunites_scored) * 5,
@@ -500,8 +538,19 @@ server <- function(input, output, session) {
                 tp_postshut_lowls = mean(post_low_lunites_scored) * 2,
             )|>
             pivot_longer(cols=c(tp_preshut_highls, tp_preshut_lowls, tp_postshut_highls, tp_postshut_lowls), names_to = "type", values_to = "points_score")
+        
+        if(length(selection) == 4){
+            data <- data |>
+                mutate(
+                    alliance_color = factor(ifelse(
+                        team_number %in% c(selection[1], selection[2]), 
+                        "red", 
+                        "blue"), levels = c("red", "blue"))
+                )
+        } else {data <- data |> mutate(alliance_color = "black")}
+        
         ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
-            geom_bar(position = "stack", stat = "identity") +
+            geom_bar(position = "stack", stat = "identity", color = data$alliance_color) +
             labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Tele Points", fill = "Points")+
             scale_fill_manual(
                 values=c("#3D5A80","#98C1D9", "#7DAA92", "#003B36"),
