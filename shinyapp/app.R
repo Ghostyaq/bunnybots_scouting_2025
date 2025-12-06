@@ -83,9 +83,9 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-    teams <- read.csv("data_files/fake_teams.csv")
-    raw <- read.csv("data_files/fake_data.csv")
-    schedule <- read.csv("data_files/fake_schedule.csv")
+    teams <- read.csv("data_files/teams.csv")
+    raw <- read.csv("data_files/data.csv")
+    schedule <- read.csv("data_files/schedule.csv")
 
     observe({
         updatePickerInput(session, "teams_selected", choices = sort(unique(raw$team_number)))
@@ -296,7 +296,7 @@ server <- function(input, output, session) {
                 tele_missed = mean(pre_lunites_missed + post_lunites_missed),
                 tele_passed = mean(pre_lunites_passed + post_lunites_passed),
                 move = mean(moved) * 4,
-                end = mean(end_position == "linked") * 5,
+                end = mean(end_position == "L") * 5,
                 avg_score = auto_low + auto_high + auto_missed + tele_highs +
                     tele_low + tele_missed + tele_passed + move + end
             )|>
@@ -377,7 +377,7 @@ server <- function(input, output, session) {
                 points = 
                     case_when(
                         end_position == "none" ~ 0, 
-                        end_position == "linked" ~ 5, 
+                        end_position == "L" ~ 5, 
                         .default=0)
             ) |>
             group_by(team_number)|>
@@ -426,7 +426,7 @@ server <- function(input, output, session) {
                     auto_lunites_high * 7 + auto_lunites_low * 4 + 
                     pre_high_lunites_scored * 5 + pre_low_lunites_scored * 2 + 
                     post_high_lunites_scored * 5 + post_high_lunites_scored * 2 + 
-                    moved * 4 + ifelse(end_position == "linked", 5, 0),
+                    moved * 4 + ifelse(end_position == "L", 5, 0),
                 team_number = factor(team_number, levels = selection),
                 alliance_color = factor(
                     ifelse(team_number %in% c(selection[3], selection[4]), "blue", "red"), 
@@ -521,7 +521,7 @@ server <- function(input, output, session) {
                 tele_missed = pre_lunites_missed + post_lunites_missed,
                 tele_high = pre_high_lunites_scored + post_high_lunites_scored,
                 tele_low = pre_low_lunites_scored + post_low_lunites_scored,
-                end = ifelse(end_position == "linked", 1, 0)
+                end = ifelse(end_position == "L", 1, 0)
             ) |>
             pivot_longer(
                 cols=c(auto_lunites_missed, auto_lunites_high, auto_lunites_low,
@@ -571,7 +571,7 @@ server <- function(input, output, session) {
                         pre_lunites_passed * 0 + post_high_lunites_scored * 5 +
                         post_low_lunites_scored * 2 + post_lunites_missed * 0 +
                         post_lunites_passed * 0 + moved * 4 + 
-                        ifelse(end_position == "linked", 5, 0)
+                        ifelse(end_position == "L", 5, 0)
                     ), digits = 2),
                 
                 taxid = paste(sum(moved),"/",n()),
@@ -612,7 +612,7 @@ server <- function(input, output, session) {
                  #           raw = raw, 
                  #           team = team_number))),
                 ground = paste(sum(ground_intake_auto), "/", n()),
-                linked = paste(sum(end_position == "linked"),"/",n())
+                linked = paste(sum(end_position == "L"),"/",n())
             )
     }
     
@@ -643,7 +643,7 @@ generate_oprs <- function(raw, schedule){
                 pre_lunites_passed * 0 + post_high_lunites_scored * 5 +
                 post_low_lunites_scored * 2 + post_lunites_missed * 0 +
                 post_lunites_passed * 0 + moved * 4 + 
-                ifelse(end_position == "linked", 5, 0)
+                ifelse(end_position == "L", 5, 0)
         ) |>
         select(match_number, team_number, total_score) |>
         rowwise() |>
