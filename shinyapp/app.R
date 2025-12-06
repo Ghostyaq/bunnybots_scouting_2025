@@ -294,7 +294,7 @@ server <- function(input, output, session) {
 
         ggplot(data, aes(x = team_number, y = points_score, fill = type)) +
             geom_bar(position = "stack", stat = "identity") +
-            labs(title = paste("Level Summary for Team", data$team_number), x = "Team", y = "Score", fill = "Points") + 
+            labs(title = "Event Summary for all teams") + 
             scale_fill_manual(
                 values = c(
                     "plum1", "plum3", "plum4", "#FFF68F", "#FFC156", "#3D5A80",
