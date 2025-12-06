@@ -109,8 +109,8 @@ ggplot(data, aes(x = factor(team_number), y = points_score, fill = type)) +
 ```{r}
 library(scoutR)
 library(tidyverse)
-raw <- read.csv("../shinyapp/data_files/fake_data.csv")
-schedule <- read.csv("../shinyapp/data_files/fake_schedule.csv")
+raw <- read.csv("../shinyapp/data_files/data.csv")
+schedule <- read.csv("../shinyapp/data_files/schedule.csv")
 data <- raw |>
     mutate(
         total_score = auto_lunites_high * 7 + auto_lunites_low * 4 + 

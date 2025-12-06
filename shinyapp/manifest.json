@@ -2693,42 +2693,6 @@
         "Built": "R 4.4.1; ; 2025-04-24 11:40:07 UTC; unix"
       }
     },
-    "scoutR": {
-      "Source": "github",
-      "Repository": null,
-      "description": {
-        "Package": "scoutR",
-        "Type": "Package",
-        "Title": "FRC Scouting Aide for R Users",
-        "Version": "1.0",
-        "Author": "Gabriel Krotkov",
-        "Maintainer": "Gabriel Krotkov <gabriel.gk.mail@gmail.com>",
-        "Description": "Scouting package to make TBA & Statbotics API data more accessible for FRC data science students.",
-        "License": "MIT",
-        "Encoding": "UTF-8",
-        "LazyData": "true",
-        "RoxygenNote": "7.3.3",
-        "URL": "https://github.com/GKrotkov/scoutR,\nhttps://gkrotkov.github.io/scoutR/",
-        "BugReports": "https://github.com/GKrotkov/tbaR/issues",
-        "Suggests": "testthat (>= 3.0.0)",
-        "Config/testthat/edition": "3",
-        "Imports": "data.table, dplyr, here, httr, pracma, readr, rvest, stringr,\nsys, tibble, tidyr, withr",
-        "RemoteType": "github",
-        "RemoteHost": "api.github.com",
-        "RemoteRepo": "scoutR",
-        "RemoteUsername": "gkrotkov",
-        "RemoteRef": "HEAD",
-        "RemoteSha": "0b36d75ac522058dcc3b3b69237f5fc69f64e930",
-        "GithubRepo": "scoutR",
-        "GithubUsername": "gkrotkov",
-        "GithubRef": "HEAD",
-        "GithubSHA1": "0b36d75ac522058dcc3b3b69237f5fc69f64e930",
-        "NeedsCompilation": "no",
-        "Packaged": "2025-11-02 19:19:23 UTC; mitchellhung",
-        "Depends": "R (>= 3.5.0)",
-        "Built": "R 4.4.1; ; 2025-11-02 19:19:26 UTC; unix"
-      }
-    },
     "selectr": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",

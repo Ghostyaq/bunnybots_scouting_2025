@@ -8,7 +8,6 @@ library(shinyWidgets)
 library(tidyverse)
 library(shinythemes)
 library(ggbeeswarm)
-library(scoutR)
 
 blair_red <- "#a7000a"
 in_rstudio <- requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()
