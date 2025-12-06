@@ -705,7 +705,7 @@ generate_oprs <- function(raw, schedule){
     
     unique_teams <- sort(unique(data$team_number))
     
-    lineups <- matrix(0, nrow = max(data$match_number)*2, ncol = length(unique(data$team_number)))
+    lineups <- matrix(0, nrow = length(unique(data$match_number))*2, ncol = length(unique(data$team_number)))
     colnames(lineups) <- sort(unique(data$team_number))
     for (i in 1:nrow(lineups)) {
         teams <- filter(data, match_number == ceiling(i/2), alliance_color == ifelse(i %% 2, "red", "blue"))
