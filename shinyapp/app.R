@@ -8,6 +8,7 @@ library(shinyWidgets)
 library(tidyverse)
 library(shinythemes)
 library(ggbeeswarm)
+library(scoutR)
 
 blair_red <- "#a7000a"
 in_rstudio <- requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()
@@ -64,7 +65,12 @@ ui <- fluidPage(
                 )
             ),
         ),
-
+        tabPanel("OPR (Experimental)",
+                 fluidRow(
+                     column(12,
+                            DTOutput("oprs"))
+                 )
+        ),
         tabPanel("Scouts",
                  fluidRow(
                      column(12,
@@ -249,6 +255,25 @@ server <- function(input, output, session) {
     
     output$compare_comments <- renderPlot({
         teams <- input$teams_selected
+    })
+    
+    output$oprs <- renderDT({
+        oprs <- as.data.frame(generate_oprs(raw, schedule))
+        oprs <- oprs |>
+            mutate(
+                opr = round(generate_oprs(raw, schedule), 2)
+            ) |>
+            select(opr)
+        
+        datatable(oprs,
+                  options = 
+                      list(
+                          dom = "ft", 
+                          lengthChange = FALSE, 
+                          rowNames = FALSE, 
+                          scrollX = TRUE, 
+                          scrollY = 500, 
+                          pageLength = nrow(oprs)))
     })
     
     output$scouts_num<-renderPlot({
@@ -546,7 +571,8 @@ server <- function(input, output, session) {
                         pre_low_lunites_scored * 2 + pre_lunites_missed * 0 +
                         pre_lunites_passed * 0 + post_high_lunites_scored * 5 +
                         post_low_lunites_scored * 2 + post_lunites_missed * 0 +
-                        post_lunites_passed * 0
+                        post_lunites_passed * 0 + moved * 4 + 
+                        ifelse(end_position == "linked", 5, 0)
                     ), digits = 2),
                 
                 taxid = paste(sum(moved),"/",n()),
@@ -609,6 +635,47 @@ server <- function(input, output, session) {
     }
 }
 
+generate_oprs <- function(raw, schedule){
+    data <- raw |>
+        mutate(
+            total_score = auto_lunites_high * 7 + auto_lunites_low * 4 + 
+                auto_lunites_missed * 0 + pre_high_lunites_scored * 5 +
+                pre_low_lunites_scored * 2 + pre_lunites_missed * 0 +
+                pre_lunites_passed * 0 + post_high_lunites_scored * 5 +
+                post_low_lunites_scored * 2 + post_lunites_missed * 0 +
+                post_lunites_passed * 0 + moved * 4 + 
+                ifelse(end_position == "linked", 5, 0)
+        ) |>
+        select(match_number, team_number, total_score) |>
+        rowwise() |>
+        mutate(
+            alliance_color = ifelse(
+                (team_number %in% c(schedule[match_number,]$R1, schedule[match_number,]$R2)),
+                "red", "blue")
+        )
+    
+    unique_teams <- sort(unique(data$team_number))
+    
+    lineups <- matrix(0, nrow = max(data$match_number)*2, ncol = length(unique(data$team_number)))
+    colnames(lineups) <- sort(unique(data$team_number))
+    for (i in 1:nrow(lineups)) {
+        teams <- filter(data, match_number == ceiling(i/2), alliance_color == ifelse(i %% 2, "red", "blue"))
+        lineups[i, as.character(teams$team_number)] = 1
+    }
+    
+    data <- data |>
+        group_by(match_number, alliance_color) |>
+        summarize(
+            total_score = sum(total_score)
+        )
+    
+    lineups <- as.data.frame(lineups)
+    lineups$score = data$total_score
+    w <- rep(1, nrow(lineups))
+    bunnybots_opr <- lm(score ~ 0 + ., data = lineups, weights = w)$coefficients
+    a <- sort(bunnybots_opr)
+    a
+}
 create_scouts <- function(raw) {
     raw <- raw |>
         select("scout_initials")
