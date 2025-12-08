@@ -45,7 +45,7 @@ ui <- fluidPage(
                     plotOutput("match_tele_cycles"),
                     plotOutput("match_tele_pts"),
                     DTOutput("match_table"),
-                    DTOutput("match_comments")
+                    #DTOutput("match_comments")
                     
                 )
             )
@@ -59,7 +59,7 @@ ui <- fluidPage(
                     plotOutput("compare_boxplots"),
                     plotOutput("compare_all_pts"),
                     plotOutput("match_hist"),
-                    plotOutput("compare_comments"),
+                    #plotOutput("compare_comments"),
                     DTOutput("compare_table")
                 )
             ),
@@ -711,7 +711,7 @@ generate_oprs <- function(raw, schedule){
         teams <- filter(data, match_number == ceiling(i/2), alliance_color == ifelse(i %% 2, "red", "blue"))
         lineups[i, as.character(teams$team_number)] = 1
     }
-    
+        
     data <- data |>
         group_by(match_number, alliance_color) |>
         summarize(
