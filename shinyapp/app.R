@@ -698,9 +698,9 @@ generate_oprs <- function(raw, schedule){
         select(match_number, team_number, total_score) |>
         rowwise() |>
         mutate(
-            alliance_color = ifelse(
+            alliance_color = factor(ifelse(
                 (team_number %in% c(schedule[match_number,]$R1, schedule[match_number,]$R2)),
-                "red", "blue")
+                "red", "blue"), levels = c("red", "blue"))
         )
     
     unique_teams <- sort(unique(data$team_number))

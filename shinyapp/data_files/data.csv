@@ -1,4 +1,4 @@
-﻿scout_initials,match_number,robot_loc,team_number,starting_position,no_show,auto_lunites_missed,auto_lunites_high,auto_lunites_low,moved,ground_intake_auto,pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_passed,end_position,bunnies_inside,tele_op_ground_intake,defense_fouls,defense_rating,postmatch_driver_ranking,postmatch_difficulties,general_comments,commentsOpen
+scout_initials,match_number,robot_loc,team_number,starting_position,no_show,auto_lunites_missed,auto_lunites_high,auto_lunites_low,moved,ground_intake_auto,pre_high_lunites_scored,pre_low_lunites_scored,pre_lunites_missed,pre_lunites_passed,post_high_lunites_scored,post_low_lunites_scored,post_lunites_missed,post_lunites_passed,end_position,bunnies_inside,tele_op_ground_intake,defense_fouls,defense_rating,postmatch_driver_ranking,postmatch_difficulties,general_comments,commentsOpen
 AM,1,B1,9033,O,FALSE,3,0,0,FALSE,FALSE,0,0,0,0,0,0,0,0,L,0,FALSE,0,0,0,,,
 HR,1,R2,5353,O,FALSE,0,0,0,TRUE,FALSE,0,14,0,0,1,0,0,0,No,0,FALSE,0,0,4,,,
 AD,1,B2,686,I,FALSE,0,0,0,TRUE,FALSE,0,0,2,0,2,0,0,0,L,2,FALSE,0,0,2,,,Litterally did nothing at all
@@ -14,7 +14,7 @@ NS,3,R1,9449,I,FALSE,0,0,0,FALSE,FALSE,0,1,0,0,0,0,0,0,No,0,FALSE,1,1,3,NA,"1,0"
 BS,4,R1,8230,I,FALSE,0,0,0,FALSE,FALSE,2,2,0,0,0,0,0,0,No,0,FALSE,0,0,4,NA,,
 NS,4,R1,2988,O,FALSE,0,0,0,FALSE,FALSE,0,0,0,0,0,0,0,0,No,0,FALSE,0,0,0,de,,
 HR,4,R2,4821,O,FALSE,0,0,0,FALSE,FALSE,3,0,0,0,0,0,0,0,L,0,FALSE,0,0,1,NA,,Driver was unable to orient the robot accurately 
-DK,4,R1,1915,I,FALSE,0,0,3,TRUE,FALSE,0,4,2,0,0,0,1,0,No,0,FALSE,0,0,3,NA,,
+DK,4,R1,1915,I,FALSE,0,0,0,TRUE,FALSE,0,0,0,0,0,0,0,0,No,0,FALSE,0,0,3,NA,,
 BS,5,R1,8726,I,FALSE,0,0,0,TRUE,FALSE,0,0,0,0,0,0,0,0,No,0,FALSE,0,0,2,NA,,Bad movement
 AD,5,R1,8592,,FALSE,3,0,0,FALSE,FALSE,0,0,0,0,0,0,0,0,No,0,FALSE,0,0,0,de,,
 HR,5,R2,2537,I,FALSE,0,0,1,FALSE,FALSE,2,0,0,0,0,0,0,0,L,0,FALSE,0,0,4,NA,,Got stuck for a little bit but got back control
